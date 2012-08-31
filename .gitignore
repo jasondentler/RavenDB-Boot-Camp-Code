@@ -2,6 +2,9 @@
 bin
 obj
 
+#Raven data folder
+Data
+
 # Resharper, User Settings, and other cache files
 *resharper.user
 *.suo
