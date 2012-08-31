@@ -4,6 +4,7 @@ obj
 
 #Raven data folder
 Data
+Log
 
 # Resharper, User Settings, and other cache files
 *resharper.user
