@@ -2,5 +2,11 @@
 bin
 obj
 
-# mstest test results
-TestResults
+# Resharper, User Settings, and other cache files
+*resharper.user
+*.suo
+*.sln.cache
+_ReSharper.*/
+*.user
+*.dotCover
+*.DS_Store
