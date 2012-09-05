@@ -4,8 +4,10 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using MvcApplication1.Controllers;
 using Raven.Client;
 using Raven.Client.Document;
+using Raven.Client.Indexes;
 
 namespace MvcApplication1
 {
@@ -48,6 +50,7 @@ namespace MvcApplication1
         {
             DocumentStore = new DocumentStore {Url = "http://localhost:8080", DefaultDatabase = "BasicOps"};
             DocumentStore.Initialize();
+            IndexCreation.CreateIndexes(typeof(StudentsByCourse).Assembly, DocumentStore);
         }
     }
 }

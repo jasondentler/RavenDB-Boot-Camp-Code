@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using Raven.Abstractions.Indexing;
+using Raven.Client.Indexes;
+using Raven.Client.Linq;
 
 namespace MvcApplication1.Controllers
 {
@@ -39,6 +42,23 @@ namespace MvcApplication1.Controllers
                 return Json(results, JsonRequestBehavior.AllowGet);
             }            
         }
+
+        public ActionResult Search(string query)
+        {
+            using (var documentSession = MvcApplication.DocumentStore.OpenSession())
+            {
+                RavenQueryStatistics statistics;
+                var results =
+                    documentSession.Query<Student, StudentsByCourse>().Statistics(out statistics).Search(x => x.Course,
+                                                                                                         query);
+                if (statistics.TotalResults == 0)
+                {
+                    var suggestions = results.Suggest();
+                    return Json(suggestions, JsonRequestBehavior.AllowGet);
+                }
+                return Json(results, JsonRequestBehavior.AllowGet);
+            }
+        }
     }
 
     public class Student
@@ -46,5 +66,15 @@ namespace MvcApplication1.Controllers
         public string Name { get; set; }
         public string Course { get; set; }
         public DateTime Date { get; set; }
+    }
+
+    public class StudentsByCourse : AbstractIndexCreationTask<Student>
+    {
+        public StudentsByCourse()
+        {
+            Map = students => from student in students
+                              select new {student.Course};
+            Indexes.Add(x => x.Course, FieldIndexing.Analyzed);
+        }
     }
 }
